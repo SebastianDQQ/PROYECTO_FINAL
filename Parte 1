@@ -1,0 +1,47 @@
+import os
+import csv
+import json
+
+def leer_csv_carpeta(carpeta, tipo, revistas):
+    if not os.path.isdir(carpeta):
+        return
+
+    for archivo in os.listdir(carpeta):
+        if archivo.endswith('.csv'):
+            ruta = os.path.join(carpeta, archivo)
+            with open(ruta, newline='', encoding='utf-8') as f:
+                lector = csv.reader(f)
+                for fila in lector:
+                    if len(fila) < 2:
+                        continue
+                    titulo = fila[0].strip().lower()
+                    valor = fila[1].strip()
+
+                    if titulo not in revistas:
+                        revistas[titulo] = {'areas': [], 'catalogos': []}
+
+                    if valor not in revistas[titulo][tipo]:
+                        revistas[titulo][tipo].append(valor)
+
+def main():
+    base_dir = 'datos'
+    csv_dir = os.path.join(base_dir, 'csv')
+    json_dir = os.path.join(base_dir, 'json')
+    os.makedirs(json_dir, exist_ok=True)
+
+    revistas = {}
+
+    leer_csv_carpeta(os.path.join(csv_dir, 'areas'), 'areas', revistas)
+    leer_csv_carpeta(os.path.join(csv_dir, 'catalogos'), 'catalogos', revistas)
+
+    json_path = os.path.join(json_dir, 'revistas.json')
+    with open(json_path, 'w', encoding='utf-8') as f:
+        json.dump(revistas, f, indent=4, ensure_ascii=False)
+
+    # Verificar que el archivo JSON puede leerse
+    with open(json_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        print(f"Archivo JSON verificado con {len(data)} revistas.")
+
+if __name__ == '__main__':
+    main()
