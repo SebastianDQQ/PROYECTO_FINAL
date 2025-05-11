@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>{{ journal_id }}</h1>
+  <ul class="list-group">
+    <li class="list-group-item"><strong>Áreas:</strong> {{ journal.areas | join(', ') }}</li>
+    <li class="list-group-item"><strong>Catálogos:</strong> {{ journal.catalogos | join(', ') }}</li>
+    <li class="list-group-item"><strong>H-Index:</strong> {{ journal.h_index }}</li>
+    <li class="list-group-item"><strong>Publisher:</strong> {{ journal.publisher }}</li>
+    <li class="list-group-item"><strong>ISSN:</strong> {{ journal.issn }}</li>
+    <li class="list-group-item"><strong>Subject Area:</strong> {{ journal.subject_area }}</li>
+    <li class="list-group-item"><strong>Website:</strong> 
+      <a href="{{ journal.website }}" target="_blank">{{ journal.website }}</a>
+    </li>
+    <li class="list-group-item"><strong>Tipo:</strong> {{ journal.type }}</li>
+  </ul>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Áreas disponibles</h1>
+  <ul class="list-group">
+    {% for area in areas %}
+      <li class="list-group-item">
+        <a href="{{ url_for('journals_by_area', area_name=area) }}">{{ area }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

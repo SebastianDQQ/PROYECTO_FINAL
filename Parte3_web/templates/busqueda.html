@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Búsqueda de Revistas</h1>
+
+  <!-- Barra de búsqueda en tiempo real, disponible desde el inicio -->
+  <input type="text" id="searchInput" class="form-control mb-3" placeholder="Filtrar resultados en tiempo real...">
+
+  {% if query %}
+    <h2>Resultados para: "{{ query }}"</h2>
+    {% if results %}
+      {% include "tabla_explorar.html" %}
+    {% else %}
+      <p>No se encontraron resultados.</p>
+    {% endif %}
+  {% else %}
+    {% include "tabla_explorar.html" %}
+  {% endif %}
+{% endblock %}

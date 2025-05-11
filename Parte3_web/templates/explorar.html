@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Explorar Revistas</h1>
+
+  <p>Seleccione una letra:</p>
+  <div>
+    {% for letter in letters %}
+      <a class="btn btn-outline-primary m-1" href="{{ url_for('journals_by_letter', letter=letter) }}">{{ letter }}</a>
+    {% endfor %}
+  </div>
+
+  <!-- Mostrar la tabla solo si se ha elegido una letra -->
+  {% if selected_letter and journals %}
+    <h3>Revistas que comienzan con "{{ selected_letter }}"</h3>
+    {% include "tabla_explorar.html" %}
+  {% endif %}
+
+{% endblock %}

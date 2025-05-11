@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Catálogos disponibles</h1>
+  <ul class="list-group">
+    {% for catalog in catalogs %}
+      <li class="list-group-item">
+        <a href="{{ url_for('journals_by_catalog', catalogo_name=catalog) }}">{{ catalog }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
