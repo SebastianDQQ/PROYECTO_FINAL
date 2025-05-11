@@ -4,7 +4,6 @@ import string
 
 app = Flask(__name__)
 
-# Cargar el archivo de revistas (Asegúrate de tener revistas_mock.json en la raíz)
 with open('datos/revistas_mock.json', encoding='utf-8') as f:
     journals = json.load(f)
 

@@ -9,7 +9,6 @@
     {% endfor %}
   </div>
 
-  <!-- Mostrar la tabla solo si se ha elegido una letra -->
   {% if selected_letter and journals %}
     <h3>Revistas que comienzan con "{{ selected_letter }}"</h3>
     {% include "tabla_explorar.html" %}

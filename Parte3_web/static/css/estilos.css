@@ -1,20 +1,16 @@
-/* estilos.css */
 
-/* Color de fondo general */
 body {
     background-color: #f8f9fa;
     font-family: Arial, sans-serif;
   }
   
-  /* Estilos para el navbar con color institucional de la Universidad de Sonora */
   .navbar {
-    background-color: #003366;  /* Color institucional (azul oscuro) */
+    background-color: #003366;
   }
   .navbar-brand, .nav-link {
     color: #ffffff !important;
   }
-  
-  /* Ajustes en los botones */
+
   .btn-outline-primary {
     color: #003366;
     border-color: #003366;
@@ -24,19 +20,16 @@ body {
     color: #ffffff;
   }
   
-  /* Estilos para las tablas */
   .table th, .table td {
     text-align: center;
     vertical-align: middle;
   }
   
-  /* Espaciado en los encabezados */
   h1 {
     margin-top: 40px;
     margin-bottom: 40px;
   }
   
-  /* Enlaces en las tablas */
   a {
     text-decoration: none;
   }  
