@@ -12,7 +12,7 @@ SCIMAGO_BASE_URL = 'https://www.scimagojr.com'
 SEARCH_URL = SCIMAGO_BASE_URL + '/journalsearch.php?q='
 INPUT_JSON = 'datos/json/revistas.json'
 OUTPUT_JSON = 'datos/json/revistas_scimagojr.json'
-MAX_REVISTAS = 45000   
+MAX_REVISTAS = 43000   
 
 if os.path.exists(OUTPUT_JSON):
     with open(OUTPUT_JSON, 'r', encoding='utf-8') as f:
@@ -40,7 +40,7 @@ def obtenerimagen(soup):
         if img and 'src' in img.attrs:
             return 'https://www.scimagojr.com/' + img['src']
     except Exception as e:
-        print(f"Error al extraer imagen: {e}")
+        print(f"Error al extraer la imagen: {e}")
     return None
 
 def extract_subject_area(soup):
@@ -62,7 +62,7 @@ def scrape_journal_data(url):
         h_index_section = soup.find('h2', string=lambda s: s and 'H-Index' in s)
         h_index = h_index_section.find_next_sibling('p').text.strip() if h_index_section else None
     except Exception as e:
-        print(f"Error al extraer H-Index: {e}")
+        print(f"Error al extraer el H-Index: {e}")
         h_index = None
 
     # Obtener Homepage
@@ -70,7 +70,7 @@ def scrape_journal_data(url):
         homepage_section = soup.find('a', string='Homepage')
         homepage_link = homepage_section['href'] if homepage_section else None
     except Exception as e:
-        print(f"Error al extraer Homepage: {e}")
+        print(f"Error al extraer el Homepage: {e}")
         homepage_link = None
 
     # Obtener Publisher
@@ -78,7 +78,7 @@ def scrape_journal_data(url):
         publisher_section = soup.find('h2', string=lambda s: s and 'Publisher' in s)
         publisher = publisher_section.find_next_sibling('p').text.strip() if publisher_section else None
     except Exception as e:
-        print(f"Error al extraer Publisher: {e}")
+        print(f"Error al extraer el Publisher: {e}")
         publisher = None
 
     # Obtener ISSN
@@ -86,7 +86,7 @@ def scrape_journal_data(url):
         issn_section = soup.find('h2', string=lambda s: s and 'ISSN' in s)
         issn = issn_section.find_next_sibling('p').text.strip() if issn_section else None
     except Exception as e:
-        print(f"Error al extraer ISSN: {e}")
+        print(f"Error al extraer el ISSN: {e}")
         issn = None
 
     # Obtener imagen del widget
@@ -97,7 +97,7 @@ def scrape_journal_data(url):
         publication_type_section = soup.find('h2', string=lambda s: s and 'Publication type' in s)
         publication_type = publication_type_section.find_next_sibling('p').text.strip() if publication_type_section else None
     except Exception as e:
-        print(f"Error al extraer Publication type: {e}")
+        print(f"Error al extraer el Publication type: {e}")
         publication_type = None
 
     return {
@@ -111,7 +111,6 @@ def scrape_journal_data(url):
         "url": url
     }
 
-# Cargar títulos a procesar
 with open(INPUT_JSON, 'r', encoding='utf-8') as f:
     revistas_input = json.load(f)
 
@@ -122,14 +121,14 @@ for revista in revistas_input:
         continue
 
     if procesadas >= MAX_REVISTAS:
-        print(f"🚫 Límite de {MAX_REVISTAS} revistas alcanzado.")
+        print(f"🚫 Se alcanzo el límite de {MAX_REVISTAS} revistas.")
         break
 
     print(f"→ Buscando: {revista}")
     try:
         url = find_journal_url(revista)
         if not url:
-            print(f"✗ No se encontró URL para {revista}")
+            print(f"✗ No se encontró un URL para {revista}")
             continue
 
         info = scrape_journal_data(url)
@@ -144,4 +143,4 @@ for revista in revistas_input:
 with open(OUTPUT_JSON, 'w', encoding='utf-8') as f:
     json.dump(revistas_data, f, indent=4, ensure_ascii=False)
 
-print(f"✔ Proceso completado. Revistas nuevas procesadas: {procesadas}")
+print(f"✔ Se realizo con exito. Revistas nuevas procesadas: {procesadas}")
