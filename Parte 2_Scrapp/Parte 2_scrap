@@ -12,9 +12,8 @@ SCIMAGO_BASE_URL = 'https://www.scimagojr.com'
 SEARCH_URL = SCIMAGO_BASE_URL + '/journalsearch.php?q='
 INPUT_JSON = 'datos/json/revistas.json'
 OUTPUT_JSON = 'datos/json/revistas_scimagojr.json'
-MAX_REVISTAS = 5  # Cambia este valor si necesitas otro límite
+MAX_REVISTAS = 45000   
 
-# Cargar revistas ya obtenidas
 if os.path.exists(OUTPUT_JSON):
     with open(OUTPUT_JSON, 'r', encoding='utf-8') as f:
         revistas_data = json.load(f)
