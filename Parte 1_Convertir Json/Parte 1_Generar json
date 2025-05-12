@@ -1,47 +1,60 @@
 import os
 import csv
 import json
+import re
+import unicodedata
 
-def leer_csv_carpeta(carpeta, tipo, revistas):
-    if not os.path.isdir(carpeta):
-        return
+def normalize_name(name):
+    name = name.strip().lower()
 
-    for archivo in os.listdir(carpeta):
-        if archivo.endswith('.csv'):
-            ruta = os.path.join(carpeta, archivo)
-            with open(ruta, newline='', encoding='utf-8') as f:
-                lector = csv.reader(f)
-                for fila in lector:
-                    if len(fila) < 2:
-                        continue
-                    titulo = fila[0].strip().lower()
-                    valor = fila[1].strip()
+    name = unicodedata.normalize('NFKD', name)
+    name = "".join(c for c in name if not unicodedata.combining(c))
 
-                    if titulo not in revistas:
-                        revistas[titulo] = {'areas': [], 'catalogos': []}
+    name = re.sub(r'\s+', ' ', name)
+    return name
 
-                    if valor not in revistas[titulo][tipo]:
-                        revistas[titulo][tipo].append(valor)
+def extraer_etiqueta(filename):
+    base = os.path.splitext(filename)[0] 
+    if "_RadGridExport" in base:
+        etiqueta = base.split("_RadGridExport")[0].strip()
+    elif " RadGridExport" in base:
+        etiqueta = base.split(" RadGridExport")[0].strip()
+    else:
+        etiqueta = base.strip()
+    return etiqueta
 
-def main():
-    base_dir = 'datos'
-    csv_dir = os.path.join(base_dir, 'csv')
-    json_dir = os.path.join(base_dir, 'json')
-    os.makedirs(json_dir, exist_ok=True)
+areas_folder = os.path.join("datos", "csv", "areas")
+catalogos_folder = os.path.join("datos", "csv", "catalogos")
+output_json_path = os.path.join("datos", "json", "revistas.json")
+revistas = {}
 
-    revistas = {}
+def procesar_csv_folder(folder, tipo):
+    for filename in os.listdir(folder):
+        if filename.lower().endswith(".csv"):
+            ruta = os.path.join(folder, filename)
+            etiqueta = extraer_etiqueta(filename)
+            try:
+                with open(ruta, mode="r", encoding="utf-8", newline='') as archivo:
+                    lector = csv.reader(archivo)
+                    for row in lector:
+                        if not row:
+                            continue
+                        journal_raw = row[0]
+                        journal = normalize_name(journal_raw)
+                        if not journal:
+                            continue
 
-    leer_csv_carpeta(os.path.join(csv_dir, 'areas'), 'areas', revistas)
-    leer_csv_carpeta(os.path.join(csv_dir, 'catalogos'), 'catalogos', revistas)
+                        if journal not in revistas:
+                            revistas[journal] = {"areas": [], "catalogos": []}
+                        if etiqueta not in revistas[journal][tipo]:
+                            revistas[journal][tipo].append(etiqueta)
+            except Exception as e:
+                print(f"Error al procesar el archivo {ruta}: {e}")
 
-    json_path = os.path.join(json_dir, 'revistas.json')
-    with open(json_path, 'w', encoding='utf-8') as f:
-        json.dump(revistas, f, indent=4, ensure_ascii=False)
+procesar_csv_folder(areas_folder, "areas")
+procesar_csv_folder(catalogos_folder, "catalogos")
 
-    # Verificar que el archivo JSON puede leerse
-    with open(json_path, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-        print(f"Archivo JSON verificado con {len(data)} revistas.")
+with open(output_json_path, "w", encoding="utf-8") as f:
+    json.dump(revistas, f, ensure_ascii=False, indent=4)
 
-if __name__ == '__main__':
-    main()
+print(f"Archivo JSON generado en: {output_json_path}")
