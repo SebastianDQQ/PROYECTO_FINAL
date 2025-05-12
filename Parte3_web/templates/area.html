@@ -1,11 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Áreas disponibles</h1>
-  <ul class="list-group">
-    {% for area in areas %}
-      <li class="list-group-item">
-        <a href="{{ url_for('journals_by_area', area_name=area) }}">{{ area }}</a>
-      </li>
-    {% endfor %}
-  </ul>
+  <h1>Áreas Disponibles</h1>
+
+  {% if areas %}
+    <ul>
+      {% for area in areas %}
+        <li><a href="{{ url_for('journals_by_area', area_name=area) }}">{{ area }}</a></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No hay áreas disponibles en este momento.</p>
+  {% endif %}
 {% endblock %}

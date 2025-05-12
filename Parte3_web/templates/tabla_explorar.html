@@ -1,12 +1,17 @@
-
+{% extends "base.html" %}
 {% block content %}
   <h1>{{ title }}</h1>
+
+  {% if "Área" in title or "Catálogo" in title %}
+    <input type="text" id="searchInput" class="form-control mb-3" placeholder="Filtrar resultados en tiempo real...">
+  {% endif %}
+
   <table class="table table-bordered table-hover" id="dataTable">
     <thead>
       <tr>
         <th>Título</th>
-        <th>Catálogos</th>
         <th>Áreas</th>
+        <th>Catálogos</th>
         <th>H-Index</th>
       </tr>
     </thead>
@@ -14,17 +19,28 @@
       {% for key, journal in journals.items() %}
       <tr>
         <td><a href="{{ url_for('revista', journal_id=key) }}">{{ key }}</a></td>
+        
         <td>
-          {% for catalog in journal.catalogos %}
-            <a href="{{ url_for('journals_by_catalog', catalogo_name=catalog) }}">{{ catalog }}</a>{% if not loop.last %}, {% endif %}
-          {% endfor %}
+          {% if journal.subjet_area_and_category %}
+            {% for subject in journal.subjet_area_and_category.keys() %}
+              <a href="{{ url_for('journals_by_area', area_name=subject) }}">{{ subject }}</a>{% if not loop.last %}, {% endif %}
+            {% endfor %}
+          {% else %}
+            No disponible
+          {% endif %}
         </td>
+
         <td>
-          {% for area in journal.areas %}
-            <a href="{{ url_for('journals_by_area', area_name=area) }}">{{ area }}</a>{% if not loop.last %}, {% endif %}
-          {% endfor %}
+          {% if journal.catalogos %}
+            {% for catalog in journal.catalogos %}
+              <a href="{{ url_for('journals_by_catalog', catalogo_name=catalog) }}">{{ catalog }}</a>{% if not loop.last %}, {% endif %}
+            {% endfor %}
+          {% else %}
+            No disponible
+          {% endif %}
         </td>
-        <td>{{ journal.h_index }}</td>
+
+        <td>{{ journal.h_index or 'No disponible' }}</td>
       </tr>
       {% endfor %}
     </tbody>

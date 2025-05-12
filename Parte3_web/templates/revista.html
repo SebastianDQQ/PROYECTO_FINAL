@@ -1,16 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
   <h1>{{ journal_id }}</h1>
+
   <ul class="list-group">
-    <li class="list-group-item"><strong>Áreas:</strong> {{ journal.areas | join(', ') }}</li>
-    <li class="list-group-item"><strong>Catálogos:</strong> {{ journal.catalogos | join(', ') }}</li>
+    <li class="list-group-item"><strong>Sitio Web:</strong> <a href="{{ journal.website }}" target="_blank">{{ journal.website }}</a></li>
     <li class="list-group-item"><strong>H-Index:</strong> {{ journal.h_index }}</li>
-    <li class="list-group-item"><strong>Publisher:</strong> {{ journal.publisher }}</li>
-    <li class="list-group-item"><strong>ISSN:</strong> {{ journal.issn }}</li>
-    <li class="list-group-item"><strong>Subject Area:</strong> {{ journal.subject_area }}</li>
-    <li class="list-group-item"><strong>Website:</strong> 
-      <a href="{{ journal.website }}" target="_blank">{{ journal.website }}</a>
+
+    <li class="list-group-item"><strong>Áreas y Categorías:</strong>
+      <ul>
+        {% for subject, categories in journal.subjet_area_and_category.items() %}
+          <li><strong>{{ subject }}</strong>: {{ categories | join(', ') }}</li>
+        {% endfor %}
+      </ul>
     </li>
-    <li class="list-group-item"><strong>Tipo:</strong> {{ journal.type }}</li>
+
+    <li class="list-group-item"><strong>Catálogos:</strong> 
+      {% for catalog in journal.catalogos %}
+        <a href="{{ url_for('journals_by_catalog', catalogo_name=catalog) }}">{{ catalog }}</a>{% if not loop.last %}, {% endif %}
+      {% endfor %}
+    </li>
+
+    <li class="list-group-item"><strong>Publisher:</strong> {{ journal.publisher }}</li>
+    <li class="list-group-item"><strong>ISSN:</strong> {{ journal.issn | join(', ') }}</li>
+    <li class="list-group-item"><strong>Widget:</strong> {{ journal.widget | safe }}</li>
+    <li class="list-group-item"><strong>Publication Type:</strong> {{ journal.publication_type }}</li>
   </ul>
 {% endblock %}
